@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edu Pereira — Fantasía oscura</title>
+<meta name="description" content="Edu Pereira, autor de fantasía oscura. El universo de Arkaria, sus sagas, sus mapas y su bitácora de escritura.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   CINE MONOCROMO — tokens
+   ============================================================ */
+:root{
+  --ink:#0a0a0b; --bg:#0c0d0f; --bg-2:#111316;
+  --bone:#ece7dd; --muted:#9a968d; --faint:#565049;
+  --gild:#c9a86a; --gild-d:#8a7038;
+  --line:rgba(236,231,221,.13);
+  --shell:1200px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+body{margin:0;background:var(--bg);color:var(--bone);
+  font-family:"Inter",system-ui,sans-serif;font-size:clamp(1rem,.9rem+.3vw,1.12rem);
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.shell{width:min(var(--shell),100% - 2.4rem);margin-inline:auto;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--gild);outline-offset:3px;}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:340;line-height:1.05;margin:0;}
+.eyebrow{font-family:"Inter",sans-serif;text-transform:uppercase;letter-spacing:.28em;
+  font-size:.7rem;font-weight:500;color:var(--muted);}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem clamp(1.2rem,3vw,2.4rem);
+  transition:background .4s ease, backdrop-filter .4s ease, border-color .4s ease;
+  border-bottom:1px solid transparent;}
+.nav.scrolled{background:rgba(10,10,11,.78);backdrop-filter:blur(10px);border-bottom-color:var(--line);}
+.nav .brand{font-family:"Fraunces",serif;font-size:1.15rem;letter-spacing:.02em;text-decoration:none;color:var(--bone);}
+.nav .brand b{color:var(--gild);font-weight:340;}
+.nav .links{display:flex;gap:1.7rem;}
+.nav .links a{font-size:.82rem;letter-spacing:.06em;color:var(--bone);text-decoration:none;opacity:.78;transition:opacity .25s,color .25s;}
+.nav .links a:hover{opacity:1;color:var(--gild);}
+@media (max-width:740px){.nav .links{display:none;}}
+
+/* ============================================================
+   HERO — foto a pantalla completa
+   ============================================================ */
+.hero{position:relative;height:100svh;min-height:580px;overflow:hidden;display:flex;align-items:flex-end;}
+.hero__img{position:absolute;inset:0;background-size:cover;background-position:72% center;
+  filter:grayscale(100%) contrast(1.04);transform:scale(1.04);
+  animation:kenburns 26s ease-out forwards;}
+@keyframes kenburns{to{transform:scale(1.12) translateY(-1.5%);}}
+@media (prefers-reduced-motion:reduce){.hero__img{animation:none;transform:none;}}
+.hero__scrim{position:absolute;inset:0;
+  background:
+    linear-gradient(90deg, rgba(8,8,9,.92) 0%, rgba(8,8,9,.55) 38%, rgba(8,8,9,.06) 66%, transparent 100%),
+    linear-gradient(0deg, rgba(8,8,9,.92) 2%, transparent 46%);}
+.hero__content{position:relative;z-index:2;padding:0 clamp(1.4rem,4vw,3rem) clamp(2.6rem,7vh,4.6rem);max-width:760px;}
+.hero__content .eyebrow{margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(3rem,9vw,6.6rem);letter-spacing:-.01em;line-height:.94;}
+.hero h1 .thin{font-style:italic;font-weight:300;color:var(--gild);}
+.hero .tagline{margin-top:1.4rem;font-size:clamp(1.05rem,1.6vw,1.35rem);color:var(--bone);max-width:44ch;line-height:1.45;opacity:.92;}
+.hero .scrollcue{margin-top:2.4rem;display:inline-flex;align-items:center;gap:.6rem;
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);}
+.hero .scrollcue::before{content:"";width:34px;height:1px;background:var(--gild);display:inline-block;}
+
+/* ============================================================
+   SECCIONES
+   ============================================================ */
+section{padding-block:clamp(4rem,9vh,7rem);}
+.divider{height:1px;background:var(--line);}
+.kicker{display:flex;align-items:center;gap:1rem;margin-bottom:2.4rem;}
+.kicker .eyebrow{white-space:nowrap;}
+.kicker .rule{height:1px;background:var(--line);flex:1;}
+
+.universe p{max-width:60ch;margin:0 0 1.1rem;color:#cfcabf;}
+.universe .pull{font-family:"Fraunces",serif;font-style:italic;font-weight:340;
+  font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.3;max-width:24ch;color:var(--bone);
+  border-left:2px solid var(--gild-d);padding-left:1.4rem;margin:2.4rem 0 0;}
+
+/* sagas */
+.saga{display:grid;grid-template-columns:1fr;gap:.2rem;padding:2.2rem 0;border-top:1px solid var(--line);}
+.saga:last-child{border-bottom:1px solid var(--line);}
+.saga .top{display:flex;align-items:baseline;gap:.2rem .9rem;flex-wrap:wrap;}
+.saga h3{font-size:clamp(2rem,5vw,3.3rem);}
+.saga .sub{font-style:italic;font-family:"Fraunces",serif;color:var(--muted);font-size:1.15rem;}
+.saga .logline{max-width:60ch;margin:1rem 0 0;color:#cfcabf;}
+.saga .logline.draft{color:var(--muted);}
+.saga .row{display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;margin-top:1.4rem;}
+.saga .pill{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gild);
+  border:1px solid var(--gild-d);padding:.36rem .7rem;border-radius:999px;}
+.saga .more{font-size:.84rem;letter-spacing:.04em;color:var(--bone);text-decoration:none;border-bottom:1px solid var(--gild-d);padding-bottom:2px;transition:opacity .25s;}
+.saga .more:hover{opacity:.65;}
+
+/* mapa */
+.map-wrap{position:relative;border:1px solid var(--line);overflow:hidden;border-radius:3px;background:var(--bg-2);}
+.map-wrap img{display:block;width:100%;height:auto;}
+.map-wrap .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,8,9,.5),transparent 55%);pointer-events:none;}
+.map-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.4rem;}
+.map-cta p{margin:0;color:var(--muted);max-width:48ch;font-size:.96rem;}
+.btn{display:inline-flex;align-items:center;gap:.6rem;font-family:"Inter",sans-serif;font-size:.82rem;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--ink);background:var(--gild);
+  padding:.7rem 1.1rem;border-radius:2px;transition:transform .2s,box-shadow .2s;white-space:nowrap;}
+.btn:hover{transform:translateY(-2px);}
+
+/* bitácora */
+.entry{display:grid;grid-template-columns:8.5rem 1fr;gap:0 2rem;padding:1.6rem 0;border-top:1px solid var(--line);}
+.entry:last-child{border-bottom:1px solid var(--line);}
+.entry .date{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.45rem;}
+.entry h3{font-size:1.4rem;margin-bottom:.45rem;}
+.entry p{margin:0;max-width:62ch;color:#cfcabf;}
+@media (max-width:620px){.entry{grid-template-columns:1fr;gap:.35rem;}.entry .date{padding-top:0;}}
+
+/* footer */
+.colophon{background:var(--bg-2);border-top:1px solid var(--line);}
+.colophon h2{font-size:clamp(1.8rem,4vw,2.8rem);max-width:16ch;}
+.colophon p{max-width:46ch;color:var(--muted);margin:1.1rem 0 1.8rem;}
+.colophon .contact a{display:inline-block;margin:0 1.4rem .6rem 0;color:var(--gild);text-decoration:none;border-bottom:1px solid var(--gild-d);padding-bottom:2px;font-size:.92rem;}
+.colophon .fine{margin-top:3rem;font-size:.74rem;letter-spacing:.06em;color:var(--faint);text-transform:uppercase;}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a class="brand" href="#inicio">Edu <b>Pereira</b></a>
+  <nav class="links" aria-label="Principal">
+    <a href="#universo">Universo</a>
+    <a href="#sagas">Sagas</a>
+    <a href="#mapa">Mapa</a>
+    <a href="#bitacora">Bitácora</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <!-- Para producción: cambia el background-image por un archivo en assets/hero.jpg -->
+  <div class="hero__img" style="background-image:url('assets/hero.jpg')"></div>
+  <div class="hero__scrim"></div>
+  <div class="hero__content">
+    <p class="eyebrow">Autor · Fantasía oscura</p>
+    <h1>Edu <span class="thin">Pereira</span></h1>
+    <p class="tagline">Música que es magia e instituciones que sonríen mientras aprietan. Un universo de fantasía oscura escrito con oído y mala leche.</p>
+    <span class="scrollcue">Baja para entrar</span>
+  </div>
+</section>
+
+<main>
+
+  <!-- UNIVERSO -->
+  <section class="universe shell" id="universo">
+    <div class="reveal">
+      <div class="kicker"><span class="eyebrow">El universo</span><span class="rule"></span></div>
+      <h2 style="font-size:clamp(1.9rem,4vw,2.9rem);margin-bottom:1.6rem;">Un solo sótano bajo varias historias</h2>
+      <p>Bajo la piel del mundo discurre la <strong>Umbra</strong>: una conjunción de planos paralelos al nuestro que, de cuando en cuando, lo rozan y dejan pasar lo que no debería. Cada saga abre una puerta distinta al mismo abismo. <em>(Texto provisional: edítalo a tu gusto.)</em></p>
+      <p class="pull">«La belleza llega siempre con barro en los bajos.»</p>
+    </div>
+  </section>
+
+  <!-- SAGAS -->
+  <section class="shell" id="sagas">
+    <div class="kicker reveal"><span class="eyebrow">Las sagas</span><span class="rule"></span></div>
+
+    <article class="saga reveal">
+      <div class="top"><h3>BARDO</h3><span class="sub">Canción del Alba</span></div>
+      <p class="logline">En la ciudad portuaria de Tibur, un copero huérfano descubre que su voz abre puertas que ningún cuchillo alcanza. Lo que no sabe es que alguien lleva tiempo escuchando — y que los músicos que tocan en las cenas de los nobles no siempre vienen solo a tocar.</p>
+      <div class="row">
+        <span class="pill">Libro I · El Copero · en escritura</span>
+        <a class="more" href="#bitacora">Seguir el avance</a>
+      </div>
+    </article>
+
+    <article class="saga reveal">
+      <div class="top"><h3>Los Crisantemos Marchitos</h3><span class="sub">Las Tres Voluntades · Libro I</span></div>
+      <!-- SINOPSIS PROVISIONAL — reescríbela -->
+      <p class="logline draft">Tres voluntades, una casa que se niega a morir y flores que se marchitan antes de abrirse. <em>(Sinopsis provisional: cámbiala.)</em></p>
+      <div class="row">
+        <span class="pill">Libro I · en escritura</span>
+        <a class="more" href="#bitacora">Seguir el avance</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- MAPA -->
+  <section class="shell" id="mapa">
+    <div class="kicker reveal"><span class="eyebrow">Los mundos</span><span class="rule"></span></div>
+    <div class="reveal">
+      <div class="map-wrap">
+        <img src="assets/map-arkaria.jpg" alt="Mapa del Reino de Arkaria — mapa provisional">
+        <div class="veil"></div>
+      </div>
+      <div class="map-cta">
+        <p>El Reino de Arkaria, sus costas y las Tierras Arrasadas. <em>Mapa provisional</em> — pronto, explorable: ciudades, rutas y la herida de la Umbra, capa a capa.</p>
+        <a class="btn" href="mapa.html">Explorar el mapa interactivo →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BITÁCORA -->
+  <section class="shell" id="bitacora">
+    <div class="kicker reveal"><span class="eyebrow">Bitácora</span><span class="rule"></span></div>
+    <div class="reveal">
+      <article class="entry">
+        <div class="date">19 Jun 2026</div>
+        <div><h3>Parte I de BARDO, cerrada</h3>
+          <p>Diez capítulos y un prólogo, revisados de arriba abajo. El copero ya tiene su año entero. Ahora empieza la Academia.</p></div>
+      </article>
+      <article class="entry">
+        <div class="date">Próximamente</div>
+        <div><h3>Tu siguiente novedad va aquí</h3>
+          <p>Un capítulo terminado, un relato, una decisión de mundo. Borra esta entrada de ejemplo cuando tengas las tuyas.</p></div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="colophon"><div class="shell reveal" id="contacto">
+  <h2>Avísame cuando haya algo nuevo</h2>
+  <p>Sin ruido: solo capítulos, relatos y novedades de verdad. <em>(Conecta tu boletín o tu correo.)</em></p>
+  <div class="contact">
+    <a href="mailto:tucorreo@ejemplo.com">Correo</a>
+    <a href="#">Instagram</a>
+    <a href="#">Boletín</a>
+  </div>
+  <p class="fine">Edu Pereira · Fantasía oscura · © 2026</p>
+</div></footer>
+
+<script>
+/* nav que se opaca al bajar */
+var nav=document.getElementById('nav');
+var onScroll=function(){ nav.classList.toggle('scrolled', window.scrollY>40); };
+onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+/* revelado al scroll */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els=document.querySelectorAll('.reveal');
+  if(reduce||!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.14});
+  els.forEach(function(e){io.observe(e);});
+})();
+</script>
+</body>
+</html>

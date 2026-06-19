@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Reino de Arkaria — mapa interactivo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<style>
+:root{
+  --ink:#0a0a0b; --bg:#0c0d0f; --bg-2:#111316;
+  --bone:#ece7dd; --muted:#9a968d; --faint:#565049;
+  --gild:#c9a86a; --gild-d:#8a7038; --line:rgba(236,231,221,.13);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--bone);
+  font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--gild);outline-offset:2px;}
+
+.wrap{position:fixed;inset:0;display:flex;flex-direction:column;}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.8rem clamp(1rem,3vw,1.6rem);background:rgba(10,10,11,.82);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:1200;}
+.bar .title{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;}
+.bar .eyebrow{font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);}
+.bar h1{font-family:"Fraunces",serif;font-weight:340;font-size:1.4rem;margin:0;}
+.bar a.back{font-size:.78rem;letter-spacing:.05em;color:var(--bone);text-decoration:none;opacity:.8;border-bottom:1px solid var(--gild-d);padding-bottom:2px;}
+.bar a.back:hover{opacity:1;color:var(--gild);}
+
+#map{flex:1;background:#0c0d0f;cursor:grab;}
+#map:active{cursor:grabbing;}
+
+.note{position:absolute;left:50%;bottom:.7rem;transform:translateX(-50%);z-index:1100;
+  font-size:.66rem;letter-spacing:.05em;color:var(--faint);background:rgba(10,10,11,.7);
+  padding:.32rem .8rem;border:1px solid var(--line);border-radius:999px;pointer-events:none;}
+
+/* marcadores */
+.pin{display:flex;align-items:center;gap:.5rem;white-space:nowrap;cursor:pointer;transform:translateX(8px);}
+.pin .dot{width:11px;height:11px;border-radius:50%;flex:none;background:var(--gild);
+  box-shadow:0 0 0 4px rgba(201,168,106,.18),0 1px 4px rgba(0,0,0,.6);transition:.18s;}
+.pin .nm{font-family:"Fraunces",serif;font-size:1rem;color:#fff;
+  text-shadow:0 1px 4px #000,0 0 10px rgba(0,0,0,.7);}
+.pin.muted .dot{background:#cdbfa6;}
+.pin:hover .dot{transform:scale(1.25);}
+.pin:hover .nm{color:var(--gild);}
+
+.leaflet-popup-content-wrapper{background:var(--bg-2);color:var(--bone);border:1px solid var(--gild-d);border-radius:4px;box-shadow:0 12px 40px rgba(0,0,0,.6);}
+.leaflet-popup-tip{background:var(--bg-2);border:1px solid var(--gild-d);}
+.leaflet-popup-content{margin:1rem 1.15rem;font-size:.98rem;line-height:1.5;max-width:240px;}
+.leaflet-popup-content h3{font-family:"Fraunces",serif;font-weight:400;font-size:1.25rem;margin:0 0 .35rem;}
+.leaflet-popup-content .kicker{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gild);margin-bottom:.45rem;}
+.leaflet-popup-content p{margin:0;color:#cfcabf;}
+.leaflet-container a.leaflet-popup-close-button{color:var(--muted);}
+.leaflet-bar a{background:var(--bg-2)!important;color:var(--bone)!important;border-bottom:1px solid var(--line)!important;}
+.leaflet-bar a:hover{background:#181b1f!important;}
+.leaflet-control-attribution{background:rgba(10,10,11,.7)!important;color:var(--faint)!important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <div class="title"><span class="eyebrow">Mapa interactivo</span><h1>El Reino de Arkaria</h1></div>
+    <a class="back" href="index.html">← Volver</a>
+  </div>
+  <div id="map"></div>
+  <div class="note">Mapa provisional · arrastra, haz zoom y pulsa los lugares</div>
+</div>
+
+<script>
+/* ============================================================
+   Mapa real de Arkaria como imageOverlay (CRS.Simple).
+   La imagen es 1600×893 px. Coloco marcadores por FRACCIÓN
+   desde la esquina superior izquierda: pt(fx, fy), 0..1.
+   Para afinar coordenadas: descomenta el console.log de abajo,
+   pulsa en el mapa y lee fx/fy en la consola del navegador.
+   ============================================================ */
+var W=1600, H=893, bounds=[[0,0],[H,W]];
+var map=L.map('map',{crs:L.CRS.Simple,minZoom:-2,maxZoom:2,zoomSnap:.25,
+  maxBounds:[[-200,-300],[H+200,W+300]],maxBoundsViscosity:.85});
+L.imageOverlay('assets/map-arkaria.jpg', bounds).addTo(map);
+map.fitBounds(bounds);
+setTimeout(function(){map.invalidateSize();map.fitBounds(bounds);},120);
+
+function pt(fx,fy){ return [H*(1-fy), W*fx]; }
+
+/* lugares: los dos primeros con lore de canon; el resto, etiquetas
+   con texto provisional para que lo rellenes tú (sin inventarte canon) */
+var sitios=[
+ {fx:.20,fy:.28,nm:'Tibur',k:'Ciudad portuaria',
+  t:'Sobre el océano, lejos del frente. Aquí sirve Rio, copero del conde Della Ordaz. La guerra solo llega como rumor entre platos.'},
+ {fx:.83,fy:.64,nm:'Las Tierras Arrasadas',k:'Zona en guerra',muted:true,
+  t:'El este asolado por las criaturas. Allí murió la familia de Rio, a manos de los Scrums. Nadie cruza la herida y vuelve igual.'},
+ {fx:.44,fy:.19,nm:'Isla de Valakia',k:'—',muted:true,t:'Por documentar. Añade aquí su descripción.'},
+ {fx:.56,fy:.28,nm:'Asklepia',k:'—',muted:true,t:'Por documentar.'},
+ {fx:.34,fy:.47,nm:'Miklepia',k:'—',muted:true,t:'Por documentar.'},
+ {fx:.61,fy:.43,nm:'Knok',k:'—',muted:true,t:'Por documentar.'},
+ {fx:.42,fy:.60,nm:'Arkaria',k:'Capital',muted:true,t:'Por documentar.'},
+ {fx:.62,fy:.57,nm:'Karakias',k:'—',muted:true,t:'Por documentar.'},
+ {fx:.52,fy:.93,nm:'Reino de Kashaar',k:'—',muted:true,t:'Por documentar.'}
+];
+
+sitios.forEach(function(s){
+  var icon=L.divIcon({className:'',iconSize:[0,0],
+    html:'<div class="pin '+(s.muted?'muted':'')+'"><span class="dot"></span><span class="nm">'+s.nm+'</span></div>'});
+  L.marker(pt(s.fx,s.fy),{icon:icon,riseOnHover:true}).addTo(map)
+   .bindPopup('<div class="kicker">'+s.k+'</div><h3>'+s.nm+'</h3><p>'+s.t+'</p>');
+});
+
+/* AYUDA PARA COLOCAR MARCADORES: descomenta para ver coordenadas al pulsar
+map.on('click', function(e){
+  var fx=(e.latlng.lng/W).toFixed(3), fy=(1 - e.latlng.lat/H).toFixed(3);
+  console.log('fx:'+fx+', fy:'+fy);
+});
+*/
+</script>
+</body>
+</html>
